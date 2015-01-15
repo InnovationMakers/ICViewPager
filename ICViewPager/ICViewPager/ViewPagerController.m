@@ -2,7 +2,7 @@
 //  ViewPagerController.m
 //  ICViewPager
 //
-//  Created by Ilter Cengiz on 28/08/2013.
+//  Created by Ilter Cengiz on 28/08/2013.a
 //  Copyright (c) 2013 Ilter Cengiz. All rights reserved.
 //
 
@@ -140,7 +140,6 @@
 @property (nonatomic) NSNumber *fixLatterTabsPositions;
 
 @property (nonatomic) NSUInteger tabCount;
-@property (nonatomic) NSUInteger activeTabIndex;
 @property (nonatomic) NSUInteger activeContentIndex;
 
 @property (getter = isAnimatingToTab, assign) BOOL animatingToTab;
