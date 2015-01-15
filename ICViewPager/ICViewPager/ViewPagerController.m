@@ -2,7 +2,7 @@
 //  ViewPagerController.m
 //  ICViewPager
 //
-//  Created by Ilter Cengiz on 28/08/2013.a
+//  Created by Ilter Cengiz on 28/08/2013.
 //  Copyright (c) 2013 Ilter Cengiz. All rights reserved.
 //
 
@@ -152,6 +152,8 @@
 @property (nonatomic) UIColor* selectedTabColor;
 @property (nonatomic) UIColor* unSelectedTabColor;
 
+@property (nonatomic) CGFloat yOffset;
+
 @end
 
 @implementation ViewPagerController
@@ -214,10 +216,7 @@
         }
     }
     
-    CGFloat yOffset = kYOffset;
-    if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)]) {
-        yOffset = [self.delegate viewPager:self valueForOption:ViewPagerOptionYOffset withDefault:yOffset];
-    }
+    CGFloat yOffset = self.yOffset;
     
     CGRect frame = self.tabsView.frame;
     frame.origin.x = 0.0;
@@ -586,6 +585,17 @@
         self.unSelectedTabColor = color;
     }
     return _unSelectedTabColor;
+}
+
+-(CGFloat)yOffset {
+    if (!_yOffset) {
+        _yOffset = kYOffset;
+        
+        if ([self.delegate respondsToSelector:@selector(viewPager:valueForOption:withDefault:)]) {
+            _yOffset = [self.delegate viewPager:self valueForOption:ViewPagerOptionYOffset withDefault:_yOffset];
+        }
+    }
+    return _yOffset;
 }
 
 #pragma mark - Public methods
