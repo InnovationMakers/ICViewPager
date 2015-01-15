@@ -341,6 +341,7 @@
     
     // Set current activeTabIndex
     _activeTabIndex = activeTabIndex;
+    _activeContentIndex = activeTabIndex;
     
     // Bring tab to active position
     // Position the tab in center if centerCurrentTab option is provided as YES
