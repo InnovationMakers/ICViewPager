@@ -42,7 +42,9 @@ typedef NS_ENUM(NSUInteger, ViewPagerOption) {
 typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
     ViewPagerIndicator,
     ViewPagerTabsView,
-    ViewPagerContent
+    ViewPagerContent,
+    ViewPagerSelectedTab,
+    ViewPagerUnSelectedTab
 };
 
 @protocol ViewPagerDataSource;

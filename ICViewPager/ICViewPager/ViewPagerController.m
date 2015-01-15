@@ -26,6 +26,8 @@
 #define kIndicatorColor [UIColor colorWithRed:178.0/255.0 green:203.0/255.0 blue:57.0/255.0 alpha:0.75]
 #define kTabsViewBackgroundColor [UIColor colorWithRed:234.0/255.0 green:234.0/255.0 blue:234.0/255.0 alpha:0.75]
 #define kContentViewBackgroundColor [UIColor colorWithRed:248.0/255.0 green:248.0/255.0 blue:248.0/255.0 alpha:0.75]
+#define kSelectedTabColor [UIColor whiteColor]
+#define kUnSelectedTabColor [UIColor lightGrayColor]
 
 #pragma mark - UIColor+Equality
 @interface UIColor (Equality)
@@ -148,6 +150,8 @@
 @property (nonatomic) UIColor *indicatorColor;
 @property (nonatomic) UIColor *tabsViewBackgroundColor;
 @property (nonatomic) UIColor *contentViewBackgroundColor;
+@property (nonatomic) UIColor* selectedTabColor;
+@property (nonatomic) UIColor* unSelectedTabColor;
 
 @end
 
@@ -323,14 +327,19 @@
 - (void)setActiveTabIndex:(NSUInteger)activeTabIndex {
     
     TabView *activeTabView;
+    UILabel* labelSubview;
     
     // Set to-be-inactive tab unselected
     activeTabView = [self tabViewAtIndex:self.activeTabIndex];
     activeTabView.selected = NO;
+    labelSubview = activeTabView.subviews[0];
+    labelSubview.textColor = [self unSelectedTabColor];
     
     // Set to-be-active tab selected
     activeTabView = [self tabViewAtIndex:activeTabIndex];
     activeTabView.selected = YES;
+    labelSubview = activeTabView.subviews[0];
+    labelSubview.textColor = [self selectedTabColor];
     
     // Set current activeTabIndex
     _activeTabIndex = activeTabIndex;
@@ -556,6 +565,30 @@
     return _contentViewBackgroundColor;
 }
 
+-(UIColor *)selectTabColor {
+    
+    if (!_selectedTabColor) {
+        UIColor* color = kSelectedTabColor;
+        if ([self.delegate respondsToSelector:@selector(viewPager:colorForComponent:withDefault:)]) {
+            color = [self.delegate viewPager:self colorForComponent:ViewPagerSelectedTab withDefault:color];
+        }
+        self.selectedTabColor = color;
+    }
+    return _selectedTabColor;
+}
+
+-(UIColor *)unSelectTabColor {
+    
+    if (!_unSelectedTabColor) {
+        UIColor* color = kUnSelectedTabColor;
+        if ([self.delegate respondsToSelector:@selector(viewPager:colorForComponent:withDefault:)]) {
+            color = [self.delegate viewPager:self colorForComponent:ViewPagerUnSelectedTab withDefault:color];
+        }
+        self.unSelectedTabColor = color;
+    }
+    return _unSelectedTabColor;
+}
+
 #pragma mark - Public methods
 - (void)reloadData {
     
@@ -575,6 +608,8 @@
     _indicatorColor = nil;
     _tabsViewBackgroundColor = nil;
     _contentViewBackgroundColor = nil;
+    _selectedTabColor = nil;
+    _unSelectedTabColor = nil;
     
     // Call to setup again with the updated data
     [self defaultSetup];
@@ -668,6 +703,8 @@
     UIColor *indicatorColor;
     UIColor *tabsViewBackgroundColor;
     UIColor *contentViewBackgroundColor;
+    UIColor* selectedTabColor;
+    UIColor* unSelectedTabColor;
     
     // Get indicatorColor and check if it is different from the current one
     // If it is, update it
@@ -710,6 +747,20 @@
         self.contentViewBackgroundColor = contentViewBackgroundColor;
     }
     
+    selectedTabColor = [self.delegate viewPager:self colorForComponent:ViewPagerSelectedTab withDefault:kSelectedTabColor];
+    
+    if (![self.selectedTabColor isEqualToColor:selectedTabColor]) {
+        
+        self.selectedTabColor = selectedTabColor;
+    }
+    
+    unSelectedTabColor = [self.delegate viewPager:self colorForComponent:ViewPagerUnSelectedTab withDefault:kSelectedTabColor];
+    
+    if (![self.unSelectedTabColor isEqualToColor:unSelectedTabColor]) {
+        
+        self.unSelectedTabColor = unSelectedTabColor;
+    }
+    
 }
 
 - (CGFloat)valueForOption:(ViewPagerOption)option {
@@ -740,6 +791,10 @@
             return [self tabsViewBackgroundColor];
         case ViewPagerContent:
             return [self contentViewBackgroundColor];
+        case ViewPagerSelectedTab:
+            return [self selectedTabColor];
+        case ViewPagerUnSelectedTab:
+            return [self unSelectedTabColor];
         default:
             return [UIColor clearColor];
     }
@@ -885,12 +940,16 @@
         // Get view from dataSource
         UIView *tabViewContent = [self.dataSource viewPager:self viewForTabAtIndex:index];
         tabViewContent.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        
+        if ([tabViewContent isKindOfClass:[UILabel class]]) {
+            UILabel* label = (UILabel *)tabViewContent;
+            [label setTextColor:self.unSelectedTabColor];
+        }
         // Create TabView and subview the content
         TabView *tabView = [[TabView alloc] initWithFrame:CGRectMake(0.0, 0.0, [self.tabWidth floatValue], [self.tabHeight floatValue])];
         [tabView addSubview:tabViewContent];
         [tabView setClipsToBounds:YES];
         [tabView setIndicatorColor:self.indicatorColor];
+        
         
         tabViewContent.center = tabView.center;
         
