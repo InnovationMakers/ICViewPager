@@ -53,6 +53,10 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
 @interface ViewPagerController : UIViewController
 
 /**
+ * Current tab index
+ */
+@property (nonatomic) NSUInteger activeTabIndex;
+/**
  * The object that acts as the data source of the receiving viewPager
  * @discussion The data source must adopt the ViewPagerDataSource protocol. The data source is not retained.
  */
