@@ -630,6 +630,10 @@
         return;
     }
     
+    if ([self.delegate respondsToSelector:@selector(viewPager:didChangeTabToIndex:)]) {
+        [self.delegate viewPager:self willChangeTabToIndex:index];
+    }
+    
     self.animatingToTab = YES;
     
     // Set activeTabIndex
