@@ -38,6 +38,8 @@ typedef NS_ENUM(NSUInteger, ViewPagerOption) {
  * ViewPagerIndicator: The colored line in the view of the active tab
  * ViewPagerTabsView: The tabs view itself
  * ViewPagerContent: Provided views goes here as content
+ * ViewPagerSelectedTab: Active Tab
+ * ViewPagerUnSelectedTab: UnActive Tab
  */
 typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
     ViewPagerIndicator,
@@ -176,7 +178,14 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
  */
 - (void)viewPager:(ViewPagerController *)viewPager didChangeTabToIndex:(NSUInteger)index;
 @optional
--(void)viewPager:(ViewPagerController *)viewPager willChangeTabToIndex:(NSUInteger)index;
+/**
+ * delegate object must implement this method if wants to be informed when a tab will change
+ *
+ * @param viewPager The viewPager that's subject to
+ * @param index The index of the active tab
+ * @param newIndex The index of the tab that will become active
+ */
+-(void)viewPager:(ViewPagerController *)viewPager willChangeTabfrom:(NSUInteger)index toIndex:(NSUInteger)newIndex;
 /**
  * Every time -reloadData method called, ViewPager will ask its delegate for option values.
  * So you don't have to set options from ViewPager itself.
