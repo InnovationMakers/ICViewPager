@@ -630,7 +630,7 @@
         return;
     }
     
-    if ([self.delegate respondsToSelector:@selector(viewPager:didChangeTabToIndex:)]) {
+    if ([self.delegate respondsToSelector:@selector(viewPager:willChangeTabfrom:)]) {
         [self.delegate viewPager:self willChangeTabfrom:self.activeTabIndex toIndex:index];
     }
     
